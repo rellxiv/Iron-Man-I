@@ -1,11 +1,14 @@
 var iron, ironImg;
 var bg, backgroundImg;
 var stoneImg;
+var diamondImg;
+var diamondScore = 0
 
 function preload() {
   backgroundImg = loadImage("images/bg.jpg");
   ironImg = loadImage("images/iron.png");
-  stoneImg = loadImage("images/stone.png")
+  stoneImg = loadImage("images/stone.png");
+  diamondImg = loadImage("images/diamond.png")
 }
 
 function setup() {
@@ -17,6 +20,7 @@ function setup() {
   iron.addImage(ironImg);
   iron.scale = 0.3;
   stoneGroup = new Group();
+  diamondGroup = new Group();
 
  
 }
@@ -33,19 +37,19 @@ function draw() {
   iron.velocityX = 0;
 
   if (keyDown("up")){
-    iron.velocityY = -8
+    iron.velocityY = -10
   }
 
   if (keyDown("down")){
-    iron.velocityY = 8
+    iron.velocityY = 10
   }
 
   if (keyDown("left")){
-    iron.velocityX = -8
+    iron.velocityX = -10
   }
 
   if (keyDown("right")){
-    iron.velocityX = 8
+    iron.velocityX = 10
   }
 
   for (var i = 0; i < (stoneGroup).length; i++) {
@@ -56,9 +60,23 @@ function draw() {
     }
   }
 
-  generateStones()
+  for (var i = 0; i < (diamondGroup).length; i++) {
+    var temp;
+    temp = (diamondGroup).get(i);
+    if (temp.isTouching(iron)) {
+        diamondScore++
+        temp.destroy();
+        temp = null;
+    }
+  }
+
+  generateStones();
+  generateDiamonds();
 
     drawSprites();
+
+    textSize(20);
+    text("Diamonds Collected: " + diamondScore, 500, 50);
    
 }
 
@@ -71,6 +89,18 @@ function generateStones(){
     stone.velocityY = 5;
     stone.lifetime = 250;
     stoneGroup.add(stone);
+}
+}
+
+function generateDiamonds(){
+  if (frameCount % 47 === 0) {
+    var diamond = createSprite(120, 0, 40, 10);
+    diamond.x = random(50, 900)
+    diamond.addImage(diamondImg);
+    diamond.scale = 0.5;
+    diamond.velocityY = 5;
+    diamond.lifetime = 250;
+    diamondGroup.add(diamond);
 }
 }
 
