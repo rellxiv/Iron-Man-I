@@ -1,9 +1,11 @@
 var iron, ironImg;
 var bg, backgroundImg;
+var stoneImg;
 
 function preload() {
   backgroundImg = loadImage("images/bg.jpg");
-  ironImg = loadImage("images/iron.png")
+  ironImg = loadImage("images/iron.png");
+  stoneImg = loadImage("images/stone.png")
 }
 
 function setup() {
@@ -14,6 +16,7 @@ function setup() {
   iron = createSprite(150, 500)
   iron.addImage(ironImg);
   iron.scale = 0.3;
+  stoneGroup = new Group();
 
  
 }
@@ -45,7 +48,29 @@ function draw() {
     iron.velocityX = 8
   }
 
+  for (var i = 0; i < (stoneGroup).length; i++) {
+    var temp;
+    temp = (stoneGroup).get(i);
+    if (temp.isTouching(iron)) {
+        iron.collide(temp);
+    }
+  }
+
+  generateStones()
+
     drawSprites();
    
+}
+
+function generateStones(){
+  if (frameCount % 60 === 0) {
+    var stone = createSprite(120, 0, 40, 10);
+    stone.x = random(50, 900)
+    stone.addImage(stoneImg);
+    stone.scale = 0.5;
+    stone.velocityY = 5;
+    stone.lifetime = 250;
+    stoneGroup.add(stone);
+}
 }
 
